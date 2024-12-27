@@ -20,6 +20,7 @@ import { usePathname } from "next/navigation";
 import appConfig from "@/constants/appConfig";
 import ButtonTheme from "../Button";
 import Link from "next/link";
+import { useEffect } from "react";
 
 interface MenuItemProps {
   title: string;
@@ -28,12 +29,26 @@ interface MenuItemProps {
 }
 
 export function AppSidebar({ items }: { items: MenuItemProps[] }) {
-  const { open } = useSidebar();
+  const { open, toggleSidebar } = useSidebar();
   const pathname = usePathname();
   const userData = {
     name: "Pattanasak Atakul",
     email: "test@example.com",
   };
+
+  useEffect(() => {
+    const savedOpenState = localStorage.getItem("sidebarOpen");
+    if (savedOpenState) {
+      const isOpen = JSON.parse(savedOpenState);
+      if (isOpen !== open) {
+        toggleSidebar();
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("sidebarOpen", JSON.stringify(open));
+  }, [open]);
 
   const LogoContent = ({ sideBarOpen }: { sideBarOpen: boolean }) => {
     return (
