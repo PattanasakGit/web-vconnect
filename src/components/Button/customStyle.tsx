@@ -58,25 +58,29 @@ export const customButtonStyle = {
       bg-white text-gray-700 border border-gray-300
       hover:bg-gray-100 hover:shadow-md hover:-translate-y-0.5
       active:bg-gray-200 active:shadow-inner active:translate-y-0.5
-      focus:ring focus:ring-gray-200
       transform transition-all duration-150 ease-in-out
       dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700 dark:active:bg-gray-900 dark:border-gray-600
     `,
 
-  dark: `
-      bg-gray-800 text-white
-      hover:bg-gray-900 hover:shadow-lg hover:-translate-y-0.5
-      active:bg-black active:shadow-inner active:translate-y-0.5
-      focus:ring focus:ring-gray-600
+    dark: `
+      backdrop-filter backdrop-blur-sm bg-[#000000] text-white hover:bg-opacity-80
+      shadow-sm hover:bg-[#000000] hover:shadow-xl hover:-translate-y-0.5
+      active:bg-opacity-50 active:shadow-inner active:translate-y-0.5
       transform transition-all duration-150 ease-in-out
-      dark:bg-gray-200 dark:text-gray-800 dark:hover:bg-gray-300 dark:active:bg-gray-400
+      dark:text-white dark:hover:bg-[#000000] dark:active:bg-gray-900
     `,
 
   transparent: `
       bg-transparent text-gray-800
       hover:bg-gray-100 hover:shadow-md hover:-translate-y-0.5
       active:bg-gray-200 active:shadow-inner active:translate-y-0.5
-      focus:ring focus:ring-gray-200
+      transform transition-all duration-150 ease-in-out
+      dark:text-white dark:hover:bg-gray-800 dark:active:bg-gray-900
+    `,
+  blur: `
+      backdrop-filter backdrop-blur-sm bg-white bg-opacity-30 text-gray-800 hover:bg-opacity-40
+      shadow-sm hover:bg-gray-100 hover:shadow-md hover:-translate-y-0.5
+      active:bg-gray-200 active:shadow-inner active:translate-y-0.5
       transform transition-all duration-150 ease-in-out
       dark:text-white dark:hover:bg-gray-800 dark:active:bg-gray-900
     `,

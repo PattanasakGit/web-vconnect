@@ -15,9 +15,11 @@ import {
 } from "@/components/ui/sidebar";
 import { Card, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Logout03Icon } from "hugeicons-react";
+import { usePathname } from "next/navigation";
 
 import appConfig from "@/constants/appConfig";
 import ButtonTheme from "../Button";
+import Link from "next/link";
 
 interface MenuItemProps {
   title: string;
@@ -27,6 +29,7 @@ interface MenuItemProps {
 
 export function AppSidebar({ items }: { items: MenuItemProps[] }) {
   const { open } = useSidebar();
+  const pathname = usePathname();
   const userData = {
     name: "Pattanasak Atakul",
     email: "test@example.com",
@@ -42,6 +45,14 @@ export function AppSidebar({ items }: { items: MenuItemProps[] }) {
         )}
       </div>
     );
+  };
+
+  const getAdjustedUrl = (pathname: string, itemUrl: string): string => {
+    if (pathname.includes("/portal") && itemUrl.startsWith("/portal")) {
+      const pathWithoutPortal = itemUrl.replace("/portal/", ""); // ลบ "/portal/"
+      return pathWithoutPortal;
+    }
+    return itemUrl.replace(/^\//, "");
   };
 
   const UserContent = () => {
@@ -61,10 +72,7 @@ export function AppSidebar({ items }: { items: MenuItemProps[] }) {
         </CardFooter>
       </Card>
     ) : (
-      <ButtonTheme
-        customStyle="gradientBlue"
-        className="w-full"
-      >
+      <ButtonTheme customStyle="gradientBlue" className="w-full">
         {userData.name[0]}
       </ButtonTheme>
     );
@@ -77,19 +85,23 @@ export function AppSidebar({ items }: { items: MenuItemProps[] }) {
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {items.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={item.url}>
-                      <item.icon />
-                      <span>{item.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
+        <SidebarMenu>
+          {items.map((item) => {
+            const adjustedUrl = getAdjustedUrl(pathname, item.url);
+
+            return (
+              <SidebarMenuItem key={item.title}>
+                <SidebarMenuButton asChild>
+                  <Link href={`/${adjustedUrl}`}>
+                    <item.icon />
+                    <span>{item.title}</span>
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+            );
+          })}
+        </SidebarMenu>
+      </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>

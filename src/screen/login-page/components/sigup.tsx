@@ -41,7 +41,7 @@ const SignupComponent = () => {
             {...register("email", {
               required: t("input_required") || "Email is required",
             })}
-            className={errors.email ? "border-red-500" : ""}
+            className={errors.email ? "border-red-500 border-2" : "border-2 border-[#00000090]"}
           />
           {errors.email && (
             <span className="text-red-500 text-sm">{errors.email.message}</span>
@@ -64,7 +64,7 @@ const SignupComponent = () => {
                     "Password must be at least 8 characters",
                 },
               })}
-              className={errors.password ? "border-red-500" : ""}
+              className={errors.password ? "border-red-500 border-2" : "border-2 border-[#00000090]"}
             />
             <button
               type="button"
@@ -95,7 +95,7 @@ const SignupComponent = () => {
                   t("passwords_not_match") ||
                   "Passwords must match",
               })}
-              className={errors.confirmPassword ? "border-red-500" : ""}
+              className={errors.confirmPassword ? "border-red-500 border-2" : "border-2 border-[#00000090]"}
             />
             <button
               type="button"
@@ -112,7 +112,7 @@ const SignupComponent = () => {
           )}
         </div>
 
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full font-bold">
           {t("signup")}
         </Button>
       </form>

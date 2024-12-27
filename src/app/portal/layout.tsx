@@ -3,7 +3,7 @@
 import { Navbar } from "@/components/Navbar";
 import { AppSidebar } from "@/components/Sidebar";
 import { SidebarProvider } from "@/components/ui/sidebar";
-import { Home, Inbox, Settings } from "lucide-react";
+import { Home, Inbox, Waypoints, NotebookText } from "lucide-react";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   const items = [
@@ -13,14 +13,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       icon: Home,
     },
     {
-      title: "Inbox",
-      url: "#",
+      title: "Projects",
+      url: "portal/projects",
       icon: Inbox,
     },
     {
-      title: "Settings",
-      url: "#",
-      icon: Settings,
+      title: "API Management",
+      url: "portal/api-management",
+      icon: Waypoints,
+    },
+    {
+      title: "Documentation",
+      url: "portal/documentation",
+      icon: NotebookText,
     },
   ];
 
@@ -29,7 +34,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <AppSidebar items={items} />
       <main className="w-full">
         <Navbar />
-        {children}
+        <div className="w-full h-[calc(100vh-61px)] overflow-hidden">{children}</div>
       </main>
     </SidebarProvider>
   );

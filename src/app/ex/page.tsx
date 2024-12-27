@@ -34,7 +34,7 @@ export default function Example() {
             {Object.keys(customButtonSize).map((size) => (
               <ButtonTheme
                 key={size}
-                customStyle="submit"
+                customStyle="success"
                 customSize={size as keyof typeof customButtonSize}
               >
                 {size}

@@ -3,11 +3,11 @@
 import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
 import { CallSignIn } from "@/sevices";
+import Button from "@/components/Button";
 
 type SigninFormInputs = {
   email: string;
@@ -51,7 +51,11 @@ const SigninComponent = () => {
             id="login-email"
             type="email"
             {...register("email", { required: t("input_required") })}
-            className={errors.email ? "border-red-500" : ""}
+            className={
+              errors.email
+                ? "border-red-500 border-2"
+                : "border-2 border-[#00000090]"
+            }
           />
           {errors.email && (
             <p className="text-red-500 text-sm">{errors.email.message}</p>
@@ -66,7 +70,11 @@ const SigninComponent = () => {
               id="login-password"
               type={showPassword ? "text" : "password"}
               {...register("password", { required: t("input_required") })}
-              className={errors.email ? "border-red-500" : ""}
+              className={
+                errors.email
+                  ? "border-red-500 border-2"
+                  : "border-2 border-[#00000090]"
+              }
             />
             <button
               type="button"
@@ -82,7 +90,7 @@ const SigninComponent = () => {
         </div>
 
         {/* Submit Button */}
-        <Button type="submit" className="w-full">
+        <Button type="submit" customStyle="dark" className="w-full font-bold">
           {t("login")}
         </Button>
       </form>
