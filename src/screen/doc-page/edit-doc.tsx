@@ -1,20 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Plus, Trash2, Save, Edit, X } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import {
-  ResizableHandle,
-  ResizablePanel,
-  ResizablePanelGroup,
-} from "@/components/ui/resizable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import mockData from "./mockData.json";
 import { markdownComponents } from "@/utils/makdowComponent";
 import ButtonWarnning from "@/components/ButtonWarnning";
+import {
+  getDocuments,
+  addDocument,
+  updateDocument,
+  deleteDocument,
+} from "./action";
+import {
+  ResizableHandle,
+  ResizablePanel,
+  ResizablePanelGroup,
+} from "@/components/ui/resizable";
 
 interface Document {
   titleEn: string;
@@ -28,92 +33,132 @@ interface Documents {
 }
 
 const EditDocsPage = () => {
-  const [docs, setDocs] = useState<Documents>(mockData);
+  const [docs, setDocs] = useState<Documents>({});
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"en" | "th">("en");
   const [editingTitleMode, setEditingTitleMode] = useState(false);
   const [tempTitle, setTempTitle] = useState({ en: "", th: "" });
-  const [tempContent, setTempContent] = useState<string>("");
+  const [tempContentEn, setTempContentEn] = useState<string>("");
+  const [tempContentTh, setTempContentTh] = useState<string>("");
   const [isEditingCotent, setIsEditingContent] = useState(false);
   const disable = isEditingCotent;
+
+  useEffect(() => {
+    const fetchDocuments = async () => {
+      const data = await getDocuments();
+      setDocs(data);
+    };
+    fetchDocuments();
+  }, []);
 
   const getContent = (id: string, lang: "en" | "th") => {
     if (!docs[id]) return "";
     return lang === "en" ? docs[id].contentEn : docs[id].contentTh;
   };
 
-  const handleContentChange = (content: string) => {
-    setTempContent(content);
+  const handleContentChange = (content: string, lang: "en" | "th") => {
+    if (lang === "en") {
+      setTempContentEn(content);
+    } else {
+      setTempContentTh(content);
+    }
   };
 
-  const handleSaveContent = (id: string) => {
-    if (!id || !tempContent) return;
-    setDocs((prev) => ({
-      ...prev,
-      [id]: {
-        ...prev[id],
-        [activeTab === "en" ? "contentEn" : "contentTh"]: tempContent,
-      },
-    }));
-    setIsEditingContent(false);
-    setSelectedDoc(id);
-    setTempContent("");
+  const handleSaveContent = async (id: string) => {
+    if (!id || (!tempContentEn && !tempContentTh)) return;
+    const updatedDoc = {
+      ...docs[id],
+      contentEn: tempContentEn,
+      contentTh: tempContentTh,
+    };
+    const success = await updateDocument(id, updatedDoc);
+    if (success) {
+      setDocs((prev) => ({
+        ...prev,
+        [id]: updatedDoc,
+      }));
+      setIsEditingContent(false);
+      setTempContentEn("");
+      setTempContentTh("");
+    }
   };
 
-  const handleAddNewDoc = () => {
-    const newId = `doc-${Object.keys(docs).length + 1}`;
+  const handleAddNewDoc = async () => {
+    const newDoc = {
+      titleEn: "New Document",
+      titleTh: "เอกสารใหม่",
+      contentEn: "",
+      contentTh: "",
+    };
+    const newId = await addDocument(newDoc);
     setDocs((prev) => ({
       ...prev,
-      [newId]: {
-        titleEn: `New Document ${Object.keys(docs).length + 1}`,
-        titleTh: `คู่มือใหม่ ${Object.keys(docs).length + 1}`,
-        contentEn: "",
-        contentTh: "",
-      },
+      [newId]: newDoc,
     }));
     setSelectedDoc(newId);
   };
 
-  const handleDeleteDoc = (id: string) => {
-    if (!id) return;
-    setDocs((prev) => {
-      const newDocs = { ...prev };
-      delete newDocs[id];
-      return newDocs;
-    });
-    setSelectedDoc(null);
-  };
-
   const handleTitleEdit = (id: string) => {
-    if (!id) return;
-    const doc = docs[id];
-    setTempTitle({ en: doc.titleEn, th: doc.titleTh });
     setEditingTitleMode(true);
+    setTempTitle({
+      en: docs[id].titleEn,
+      th: docs[id].titleTh,
+    });
   };
 
-  const handleTitleSave = (id: string) => {
-    if (!id) return;
-    setDocs((prev) => ({
-      ...prev,
-      [id]: {
-        ...prev[id],
-        titleEn: tempTitle.en,
-        titleTh: tempTitle.th,
-      },
-    }));
-    setEditingTitleMode(false);
+  const handleTitleSave = async (id: string) => {
+    if (!id || !tempTitle.en || !tempTitle.th) return;
+    const updatedDoc = {
+      ...docs[id],
+      titleEn: tempTitle.en,
+      titleTh: tempTitle.th,
+    };
+    const success = await updateDocument(id, updatedDoc);
+    if (success) {
+      setDocs((prev) => ({
+        ...prev,
+        [id]: updatedDoc,
+      }));
+      setEditingTitleMode(false);
+      setTempTitle({ en: "", th: "" });
+    }
+  };
+
+  const handleDeleteDoc = async (id: string) => {
+    const success = await deleteDocument(id);
+    if (success) {
+      const newDocs = { ...docs };
+      delete newDocs[id];
+      setDocs(newDocs);
+      setSelectedDoc(null);
+    }
+  };
+
+  const handleEditContent = () => {
+    if (selectedDoc) {
+      setTempContentEn(docs[selectedDoc].contentEn);
+      setTempContentTh(docs[selectedDoc].contentTh);
+      setIsEditingContent(true);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingContent(false);
+    setTempContentEn("");
+    setTempContentTh("");
   };
 
   return (
     <div className="h-full p-2 w-full bg-zinc-100 dark:bg-[#292a2c]">
       <ResizablePanelGroup direction="horizontal">
         {/* Sidebar */}
-        <ResizablePanel defaultSize={20} minSize={20} maxSize={40}>
+        <ResizablePanel defaultSize={20} minSize={20} maxSize={80}>
           <div className="h-full border rounded-lg p-4 mr-2 bg-background">
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-bold">Documents</h2>
               <Button
                 size="sm"
+                className="bg-blue-500 hover:bg-blue-900 hover:text-white text-white"
                 onClick={handleAddNewDoc}
                 disabled={isEditingCotent}
               >
@@ -175,7 +220,7 @@ const EditDocsPage = () => {
                         </div>
                       ) : (
                         <>
-                          <span>
+                          <span className="w-full truncate">
                             {activeTab === "en" ? doc.titleEn : doc.titleTh}
                           </span>
                           <div className="flex gap-2">
@@ -229,7 +274,7 @@ const EditDocsPage = () => {
                         text="Cancel"
                         title="Are you sure?"
                         detail="If you cancel, all changes will be lost."
-                        callback={() => setIsEditingContent(false)}
+                        callback={handleCancelEdit}
                       />
                       <ButtonWarnning
                         className=" bg-green-700 hover:bg-green-900 hover:text-white text-white"
@@ -241,7 +286,11 @@ const EditDocsPage = () => {
                       />
                     </>
                   ) : (
-                    <Button size="sm" onClick={() => setIsEditingContent(true)}>
+                    <Button
+                      className="bg-orange-600 hover:bg-orange-800 text-white"
+                      size="sm"
+                      onClick={handleEditContent}
+                    >
                       Edit
                     </Button>
                   )}
@@ -255,8 +304,16 @@ const EditDocsPage = () => {
                     <Textarea
                       className="h-full resize-none border-0 pb-[80px]"
                       disabled={!isEditingCotent}
-                      value={tempContent || getContent(selectedDoc, activeTab)}
-                      onChange={(e) => handleContentChange(e.target.value)}
+                      value={
+                        isEditingCotent
+                          ? activeTab === "en"
+                            ? tempContentEn
+                            : tempContentTh
+                          : getContent(selectedDoc, activeTab)
+                      }
+                      onChange={(e) =>
+                        handleContentChange(e.target.value, activeTab)
+                      }
                       placeholder="Write documentation(markDown) here... "
                     />
                   </div>
@@ -266,7 +323,11 @@ const EditDocsPage = () => {
                 <ResizablePanel defaultSize={50}>
                   <div className="border rounded-r-sm p-4 overflow-auto h-full mt-2 pb-[80px]">
                     <ReactMarkdown components={markdownComponents}>
-                      {tempContent || getContent(selectedDoc, activeTab)}
+                      {isEditingCotent
+                        ? activeTab === "en"
+                          ? tempContentEn
+                          : tempContentTh
+                        : getContent(selectedDoc, activeTab)}
                     </ReactMarkdown>
                   </div>
                 </ResizablePanel>

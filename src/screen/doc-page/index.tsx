@@ -6,9 +6,7 @@ import { Button as BTN } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import { Card, CardContent } from "@/components/ui/card";
-import mockData from "./mockData.json";
-import Snippet from "@/components/Snippet";
-import Image from "next/image";
+import data from "@/store/documentation/data.json";
 import { useTranslation } from "react-i18next";
 import Button from "@/components/Button";
 import Link from "next/link";
@@ -25,9 +23,9 @@ interface DocsData {
   [key: string]: DocContent;
 }
 
-type DocPageKey = keyof typeof mockData;
+type DocPageKey = keyof typeof data;
 const docs: DocsData = {
-  ...mockData,
+  ...data,
 };
 
 const DocsPage: React.FC = () => {
@@ -42,33 +40,33 @@ const DocsPage: React.FC = () => {
       {/* Sidebar */}
       <div className="w-64 border-r">
         <div className="p-4 font-medium text-xl text-center">Documents</div>
-        <div className="px-16">
-          <Link href="/portal/edit-documentation">
-            <Button
-              type="submit"
-              customSize="sm"
-              customStyle="light"
-              className="w-full font-bold"
-            >
-              Test Edit
-            </Button>
-          </Link>
-        </div>
         <Separator className="my-2" />
         <ScrollArea className="h-[calc(100vh-5rem)]">
-          <div className="p-4 space-y-2">
+          <div className="">
             {(Object.entries(docs) as [DocPageKey, DocContent][]).map(
               ([key, { titleEn, titleTh }]) => (
                 <BTN
                   key={key}
                   variant={activePage === key ? "secondary" : "ghost"}
-                  className="w-full justify-start"
+                  className="w-full rounded-none h-[50px] truncate"
                   onClick={() => setActivePage(key)}
                 >
-                  {currentLang === "th" ? titleTh : titleEn}
+                  <p className="w-[230px] text-start truncate">{currentLang === "th" ? titleTh : titleEn}</p>
                 </BTN>
               )
             )}
+          </div>
+          <div className="mt-[70%] px-16">
+            <Link href="/portal/edit-documentation">
+              <Button
+                type="submit"
+                customSize="sm"
+                customStyle="light"
+                className="w-full font-bold"
+              >
+                Test Edit
+              </Button>
+            </Link>
           </div>
         </ScrollArea>
       </div>
@@ -76,7 +74,7 @@ const DocsPage: React.FC = () => {
       {/* Content Area */}
       <div className="flex-1 bg-zinc-100 dark:bg-zinc-900">
         <ScrollArea className="h-full">
-          <div className="p-8">
+          <div className="p-4">
             <Card>
               <CardContent className="p-6">
                 <ReactMarkdown
