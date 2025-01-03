@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
@@ -10,7 +9,7 @@ import data from "@/store/documentation/data.json";
 import { useTranslation } from "react-i18next";
 import Button from "@/components/Button";
 import Link from "next/link";
-import { markdownComponents } from "@/utils/makdowComponent";
+import { markdownComponents } from "@/components/RenderMakdown";
 
 interface DocContent {
   titleEn: string;

@@ -7,7 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { markdownComponents } from "@/utils/makdowComponent";
+import { markdownComponents } from "@/components/RenderMakdown";
 import ButtonWarnning from "@/components/ButtonWarnning";
 import {
   getDocuments,
