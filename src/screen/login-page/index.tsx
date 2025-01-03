@@ -14,7 +14,7 @@ import { useTranslation } from "react-i18next";
 import Button from "@/components/Button";
 
 const LoginPage = () => {
-  const { t } = useTranslation("auth");
+  const { t } = useTranslation("translation");
   return (
     <div>
       <div className="flex items-center justify-center p-4">

@@ -4,54 +4,48 @@ export const customButtonStyle = {
       bg-blue-600 text-white
       hover:bg-blue-700 hover:shadow-lg hover:-translate-y-0.5 
       active:bg-blue-800 active:shadow-inner active:translate-y-0.5
-      focus:ring focus:ring-blue-300 
       transform transition-all duration-150 ease-in-out
-      dark:bg-blue-500 dark:hover:bg-blue-600 dark:active:bg-blue-700 dark:focus:ring-blue-400
+      dark:bg-blue-500 dark:hover:bg-blue-600 dark:active:bg-blue-700
     `,
 
   secondary: `
       bg-gray-100 text-gray-800
       hover:bg-gray-200 hover:shadow-md hover:-translate-y-0.5
       active:bg-gray-300 active:shadow-inner active:translate-y-0.5
-      focus:ring focus:ring-gray-300
       transform transition-all duration-150 ease-in-out
-      dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:active:bg-gray-800 dark:focus:ring-gray-500
+      dark:bg-gray-700 dark:text-white dark:hover:bg-gray-600 dark:active:bg-gray-800
     `,
 
   success: `
       bg-green-500 text-white
       hover:bg-green-600 hover:shadow-lg hover:-translate-y-0.5
       active:bg-green-700 active:shadow-inner active:translate-y-0.5
-      focus:ring focus:ring-green-300
       transform transition-all duration-150 ease-in-out
-      dark:bg-green-400 dark:hover:bg-green-500 dark:active:bg-green-600 dark:focus:ring-green-400
+      dark:bg-green-400 dark:hover:bg-green-500 dark:active:bg-green-600
     `,
 
   danger: `
       bg-red-500 text-white
       hover:bg-red-600 hover:shadow-lg hover:-translate-y-0.5
       active:bg-red-700 active:shadow-inner active:translate-y-0.5
-      focus:ring focus:ring-red-300
       transform transition-all duration-150 ease-in-out
-      dark:bg-red-400 dark:hover:bg-red-500 dark:active:bg-red-600 dark:focus:ring-red-400
+      dark:bg-red-400 dark:hover:bg-red-500 dark:active:bg-red-600
     `,
 
   warning: `
       bg-yellow-500 text-black
       hover:bg-yellow-600 hover:shadow-lg hover:-translate-y-0.5
       active:bg-yellow-700 active:shadow-inner active:translate-y-0.5
-      focus:ring focus:ring-yellow-300
       transform transition-all duration-150 ease-in-out
-      dark:bg-yellow-400 dark:hover:bg-yellow-500 dark:active:bg-yellow-600 dark:focus:ring-yellow-400
+      dark:bg-yellow-400 dark:hover:bg-yellow-500 dark:active:bg-yellow-600
     `,
 
   info: `
       bg-cyan-500 text-white
       hover:bg-cyan-600 hover:shadow-lg hover:-translate-y-0.5
       active:bg-cyan-700 active:shadow-inner active:translate-y-0.5
-      focus:ring focus:ring-cyan-300
       transform transition-all duration-150 ease-in-out
-      dark:bg-cyan-400 dark:hover:bg-cyan-500 dark:active:bg-cyan-600 dark:focus:ring-cyan-400
+      dark:bg-cyan-400 dark:hover:bg-cyan-500 dark:active:bg-cyan-600
     `,
 
   light: `
@@ -89,7 +83,6 @@ export const customButtonStyle = {
       bg-gradient-to-r from-blue-500 to-blue-700 text-white
       hover:from-blue-600 hover:to-blue-800 hover:shadow-lg hover:-translate-y-0.5
       active:from-blue-700 active:to-blue-900 active:shadow-inner active:translate-y-0.5
-      focus:ring focus:ring-blue-300
       transform transition-all duration-150 ease-in-out
       dark:from-blue-400 dark:to-blue-600 dark:hover:from-blue-500 dark:hover:to-blue-700
     `,
@@ -98,7 +91,6 @@ export const customButtonStyle = {
       bg-gradient-to-r from-purple-500 to-purple-700 text-white
       hover:from-purple-600 hover:to-purple-800 hover:shadow-lg hover:-translate-y-0.5
       active:from-purple-700 active:to-purple-900 active:shadow-inner active:translate-y-0.5
-      focus:ring focus:ring-purple-300
       transform transition-all duration-150 ease-in-out
       dark:from-purple-400 dark:to-purple-600 dark:hover:from-purple-500 dark:hover:to-purple-700
     `,

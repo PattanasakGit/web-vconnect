@@ -9,5 +9,9 @@
   "passwords_not_match": "Passwords Not match",
   "password_min_length": "Password must be at least 8 characters",
   "input_required": "Please enter a value",
-  "invalid_login": "Password or email is incorrect"
+  "invalid_login": "Password or email is incorrect",
+
+  "api_key_title_page": "API Key Management",
+  "your_api_key": "Your API Key",
+  "invoke_button": "INVOKE"
 }

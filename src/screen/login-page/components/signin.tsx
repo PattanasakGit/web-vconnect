@@ -15,7 +15,7 @@ type SigninFormInputs = {
 };
 
 const SigninComponent = () => {
-  const { t } = useTranslation("auth");
+  const { t } = useTranslation("translation");
   const [showPassword, setShowPassword] = useState(false);
   const [invalidLogin, setInvalidLogin] = useState(false);
   const {

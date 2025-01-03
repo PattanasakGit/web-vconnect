@@ -9,5 +9,9 @@
   "passwords_not_match": "รหัสผ่านไม่ตรงกัน",
   "password_min_length": "รหัสผ่านต้องมีอย่างน้อย 8 ตัวอักษร",
   "input_required": "กรุณากรอกข้อมูล",
-  "invalid_login": "รหัสผ่านหรืออีเมลไม่ถูกต้อง"
+  "invalid_login": "รหัสผ่านหรืออีเมลไม่ถูกต้อง",
+
+  "api_key_title_page": "การจัดการ API Key",
+  "your_api_key": "API Key ของคุณ",
+  "invoke_button": "เรียกใช้"
 }

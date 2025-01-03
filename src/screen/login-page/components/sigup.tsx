@@ -15,7 +15,7 @@ type SignupFormInputs = {
   confirmPassword: string;
 };
 const SignupComponent = () => {
-  const { t } = useTranslation("auth");
+  const { t } = useTranslation("translation");
   const {
     register,
     handleSubmit,
