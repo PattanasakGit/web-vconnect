@@ -32,7 +32,7 @@ const ApiKeyPage = () => {
 
   return (
     <div className="h-full w-full p-4   bg-backgound flex justify-center">
-      <div className="w-full h-full bg-zinc-100 dark:bg-[#FFFFFF05] rounded-xl p-4 pt-8">
+      <div className="w-full h-full bg-zinc-100 dark:bg-[#FFFFFF05] border rounded-xl p-4 pt-8">
         <div className="max-w-3xl mx-auto space-y-6">
           <h2 className="text-4xl font-bold text-center text-gray-700 dark:text-gray-200 uppercase">
             {t("api_key_title_page")}
