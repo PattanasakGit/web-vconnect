@@ -4,9 +4,13 @@ import * as React from "react";
 import { Button, ButtonProps, buttonVariants } from "@/components/ui/button";
 import { Loader2, Check } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { customButtonSize, customButtonStyle, customButtonVariant } from "./customStyle";
+import {
+  customButtonSize,
+  customButtonStyle,
+  customButtonVariant,
+} from "./customStyle";
 
-interface CustomButtonProps extends ButtonProps {
+export interface CustomButtonProps extends ButtonProps {
   buttonVariants?: string; // เพิ่มพร็อปสำหรับการกำหนดคลาส buttonVariants
   customStyle?: keyof typeof customButtonStyle;
   customVariant?: keyof typeof customButtonVariant;
@@ -14,6 +18,7 @@ interface CustomButtonProps extends ButtonProps {
   isLoading?: boolean;
   loadingText?: string;
   icon?: React.ReactNode;
+  isIconOnly?: boolean;
   iconPosition?: "left" | "right";
   success?: boolean;
   successText?: string;
@@ -30,7 +35,9 @@ const ButtonTheme: React.FC<CustomButtonProps> = ({
   disabled,
   isLoading,
   loadingText,
+  isIconOnly = false,
   icon,
+
   iconPosition = "left",
   success,
   successText,
@@ -60,9 +67,41 @@ const ButtonTheme: React.FC<CustomButtonProps> = ({
 
   const renderContent = () => (
     <>
-      {iconPosition === "left" && (isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : showSuccess ? <Check className="h-4 w-4" /> : icon)}
-      <span>{isLoading ? loadingText || children : showSuccess ? successText || children : children}</span>
-      {iconPosition === "right" && (isLoading ? <Loader2 className="h-4 w-4 animate-spin" /> : showSuccess ? <Check className="h-4 w-4" /> : icon)}
+      {isIconOnly ? (
+        isLoading ? (
+          <Loader2 className="h-4 w-4 animate-spin" />
+        ) : showSuccess ? (
+          <Check className="h-4 w-4" />
+        ) : (
+          icon
+        )
+      ) : (
+        <>
+          {iconPosition === "left" &&
+            (isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : showSuccess ? (
+              <Check className="h-4 w-4" />
+            ) : (
+              icon
+            ))}
+          <span>
+            {isLoading
+              ? loadingText || children
+              : showSuccess
+              ? successText || children
+              : children}
+          </span>
+          {iconPosition === "right" &&
+            (isLoading ? (
+              <Loader2 className="h-4 w-4 animate-spin" />
+            ) : showSuccess ? (
+              <Check className="h-4 w-4" />
+            ) : (
+              icon
+            ))}
+        </>
+      )}
     </>
   );
 

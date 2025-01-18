@@ -6,12 +6,15 @@ import { ProjectCard, ProjectList } from "./views/ProjectViews";
 import EmptyState from "./views/EmptyState";
 import NoSearchResults from "./views/NoSearchResults";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import CreateProjectModal from "./views/ModalCreateProjects";
+import { useIsMobile } from "@/hooks/use-mobile";
 interface ProjectListType {
   id: number;
   name: string;
   description: string;
 }
 
+// const mockProjectLists: ProjectListType[] = [];
 const mockProjectLists: ProjectListType[] = [
   {
     id: 1,
@@ -148,6 +151,7 @@ const mockProjectLists: ProjectListType[] = [
 const ProjectsPage = () => {
   const [projectLists, setProjectLists] = useState<ProjectListType[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
+  const isMobileView = useIsMobile();
   const [viewMode, setViewMode] = useState<"grid" | "list">(
     (localStorage.getItem("viewMode") as "grid" | "list") ?? "grid"
   );
@@ -178,12 +182,19 @@ const ProjectsPage = () => {
   );
   return (
     <div className="h-full w-full bg-background p-4">
-      <div className="h-full w-full bg-zinc-100 dark:bg-[#FFFFFF05] border rounded-xl p-8 overflow-hidden">
+      <div
+        className={`h-full w-full bg-zinc-100 dark:bg-[#FFFFFF05] border rounded-xl overflow-hidden ${
+          isMobileView ? "p-4" : "p-8"
+        }`}
+      >
         <header className="mb-8">
           <div className="flex justify-between items-center mb-4">
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-              Projects
-            </h1>
+            <div className={`flex ${isMobileView ? "gap-2" : "gap-8"}`}>
+              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                PROJECTS
+              </h1>
+              <CreateProjectModal />
+            </div>
             <div className="flex">
               <Button
                 variant="outline"
