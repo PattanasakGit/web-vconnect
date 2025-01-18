@@ -187,54 +187,49 @@ const ProjectsPage = () => {
           isMobileView ? "p-4" : "p-8"
         }`}
       >
-        <header className="mb-8">
+        <header>
           <div className="flex justify-between items-center mb-4">
-            <div className={`flex ${isMobileView ? "gap-2" : "gap-8"}`}>
-              <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                PROJECTS
-              </h1>
+            <div
+              className={`w-full flex justify-between ${
+                isMobileView ? "gap-2" : "gap-8"
+              }`}
+            >
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
+                  PROJECTS
+                </h1>
+                <p className="text-gray-600 dark:text-gray-400">
+                  Manage your projects
+                </p>
+              </div>
+              <div className="relative w-[40%] hidden sm:flex">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+                <Input
+                  placeholder="Search projects..."
+                  className="pl-8 bg-[#ffffffdb] dark:bg-[#ffffff10] rounded-lg"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
               <CreateProjectModal />
             </div>
-            <div className="flex">
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setViewMode("grid")}
-                className={
-                  viewMode === "grid"
-                    ? "rounded-r-none rounded-l-xl bg-primary text-primary-foreground"
-                    : "rounded-r-none rounded-l-xl"
-                }
-              >
-                <LayoutGrid className="h-4 w-4" />
-              </Button>
-              <Button
-                variant="outline"
-                size="icon"
-                onClick={() => setViewMode("list")}
-                className={
-                  viewMode === "list"
-                    ? "rounded-l-none rounded-r-xl bg-primary text-primary-foreground"
-                    : "rounded-l-none rounded-r-xl"
-                }
-              >
-                <List className="h-4 w-4" />
-              </Button>
-            </div>
           </div>
-          <div className="flex justify-between items-center">
-            <p className="text-gray-600 dark:text-gray-400">
-              Manage and organize your projects
-            </p>
-            <div className="relative w-64">
-              <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-              <Input
-                placeholder="Search projects..."
-                className="pl-8"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+          <div className="flex justify-between items-center px-4">
+            <div className="w-[70%]">
+              <div className="relative sm:hidden">
+                <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
+                <Input
+                  placeholder="Search projects..."
+                  className="pl-8 bg-[#ffffffdb] dark:bg-[#ffffff10] rounded-lg"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
             </div>
+            <RenderButtonViewMode
+              viewMode={viewMode}
+              setViewMode={setViewMode}
+            />
           </div>
         </header>
 
@@ -271,3 +266,40 @@ const ProjectsPage = () => {
   );
 };
 export default ProjectsPage;
+
+const RenderButtonViewMode = ({
+  viewMode,
+  setViewMode,
+}: {
+  viewMode: "grid" | "list";
+  setViewMode: React.Dispatch<React.SetStateAction<"grid" | "list">>;
+}) => {
+  return (
+    <div className="flex">
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => setViewMode("grid")}
+        className={
+          viewMode === "grid"
+            ? "rounded-r-none rounded-l-xl bg-primary text-primary-foreground"
+            : "rounded-r-none rounded-l-xl"
+        }
+      >
+        <LayoutGrid className="h-4 w-4" />
+      </Button>
+      <Button
+        variant="outline"
+        size="icon"
+        onClick={() => setViewMode("list")}
+        className={
+          viewMode === "list"
+            ? "rounded-l-none rounded-r-xl bg-primary text-primary-foreground"
+            : "rounded-l-none rounded-r-xl"
+        }
+      >
+        <List className="h-4 w-4" />
+      </Button>
+    </div>
+  );
+};
