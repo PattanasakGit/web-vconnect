@@ -1,13 +1,9 @@
 import React, { useEffect, useState } from "react";
-import { Search, LayoutGrid, List } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { ProjectCard, ProjectList } from "./views/ProjectViews";
-import EmptyState from "./views/EmptyState";
-import NoSearchResults from "./views/NoSearchResults";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import CreateProjectModal from "./views/ModalCreateProjects";
-import { useIsMobile } from "@/hooks/use-mobile";
+import CardDisplayDatalist from "@/components/CardDisplayData";
+import { toast } from "sonner";
+
 interface ProjectListType {
   id: number;
   name: string;
@@ -150,20 +146,22 @@ const mockProjectLists: ProjectListType[] = [
 
 const ProjectsPage = () => {
   const [projectLists, setProjectLists] = useState<ProjectListType[]>([]);
-  const [searchTerm, setSearchTerm] = useState("");
-  const isMobileView = useIsMobile();
-  const [viewMode, setViewMode] = useState<"grid" | "list">(
-    (localStorage.getItem("viewMode") as "grid" | "list") ?? "grid"
-  );
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const textEmptyData = {
+    title: "No Projects Yet",
+    message: "Create your first project to get started",
+  };
 
   useEffect(() => {
     const fetchProjects = async () => {
+      setIsLoading(true);
       try {
         const response = await new Promise<ProjectListType[]>((resolve) =>
           setTimeout(() => resolve(mockProjectLists), 1000)
         );
         setProjectLists(response);
+      } catch {
+        toast.error("เกิดข้อผิดพลาดในการดาวน์โหลดข้อมูลโปรเจค");
       } finally {
         setIsLoading(false);
       }
@@ -171,135 +169,26 @@ const ProjectsPage = () => {
     fetchProjects();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("viewMode", viewMode);
-  }, [viewMode]);
-
-  const filteredProjects = projectLists.filter(
-    (project) =>
-      project.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      project.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const renderProjectCard = (project: ProjectListType) => (
+    <ProjectCard key={project.id} project={project} />
   );
-  return (
-    <div className="h-full w-full bg-background p-4">
-      <div
-        className={`h-full w-full bg-zinc-100 dark:bg-[#FFFFFF05] border rounded-xl overflow-hidden ${
-          isMobileView ? "p-4" : "p-8"
-        }`}
-      >
-        <header>
-          <div className="flex justify-between items-center mb-4">
-            <div
-              className={`w-full flex justify-between ${
-                isMobileView ? "gap-2" : "gap-8"
-              }`}
-            >
-              <div>
-                <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
-                  PROJECTS
-                </h1>
-                <p className="text-gray-600 dark:text-gray-400">
-                  Manage your projects
-                </p>
-              </div>
-              <div className="relative w-[40%] hidden sm:flex">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-                <Input
-                  placeholder="Search projects..."
-                  className="pl-8 bg-[#ffffffdb] dark:bg-[#ffffff10] rounded-lg"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <CreateProjectModal />
-            </div>
-          </div>
-          <div className="flex justify-between items-center px-4">
-            <div className="w-[70%]">
-              <div className="relative sm:hidden">
-                <Search className="absolute left-2 top-2.5 h-4 w-4 text-gray-500" />
-                <Input
-                  placeholder="Search projects..."
-                  className="pl-8 bg-[#ffffffdb] dark:bg-[#ffffff10] rounded-lg"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-            </div>
-            <RenderButtonViewMode
-              viewMode={viewMode}
-              setViewMode={setViewMode}
-            />
-          </div>
-        </header>
 
-        <ScrollArea className="h-[85%] p-3">
-          <div className="space-y-6 ">
-            {isLoading ? (
-              <div className="flex justify-center items-center h-64">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-              </div>
-            ) : projectLists.length === 0 ? (
-              <EmptyState />
-            ) : filteredProjects.length === 0 ? (
-              <NoSearchResults
-                searchTerm={searchTerm}
-                setSearchTerm={setSearchTerm}
-              />
-            ) : viewMode === "grid" ? (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {filteredProjects.map((project) => (
-                  <ProjectCard key={project.id} project={project} />
-                ))}
-              </div>
-            ) : (
-              <div className="flex flex-col gap-4">
-                {filteredProjects.map((project) => (
-                  <ProjectList key={project.id} project={project} />
-                ))}
-              </div>
-            )}
-          </div>
-        </ScrollArea>
-      </div>
-    </div>
+  const renderProjectList = (project: ProjectListType) => (
+    <ProjectList key={project.id} project={project} />
+  );
+
+  return (
+    <CardDisplayDatalist
+      data={projectLists}
+      title="PROJECTS"
+      subtitle="Manage your projects"
+      renderCard={renderProjectCard}
+      renderList={renderProjectList}
+      ModalCreate={CreateProjectModal}
+      isDataLoading={isLoading}
+      textEmptyData={textEmptyData}
+    />
   );
 };
+
 export default ProjectsPage;
-
-const RenderButtonViewMode = ({
-  viewMode,
-  setViewMode,
-}: {
-  viewMode: "grid" | "list";
-  setViewMode: React.Dispatch<React.SetStateAction<"grid" | "list">>;
-}) => {
-  return (
-    <div className="flex">
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => setViewMode("grid")}
-        className={
-          viewMode === "grid"
-            ? "rounded-r-none rounded-l-xl bg-primary text-primary-foreground"
-            : "rounded-r-none rounded-l-xl"
-        }
-      >
-        <LayoutGrid className="h-4 w-4" />
-      </Button>
-      <Button
-        variant="outline"
-        size="icon"
-        onClick={() => setViewMode("list")}
-        className={
-          viewMode === "list"
-            ? "rounded-l-none rounded-r-xl bg-primary text-primary-foreground"
-            : "rounded-l-none rounded-r-xl"
-        }
-      >
-        <List className="h-4 w-4" />
-      </Button>
-    </div>
-  );
-};

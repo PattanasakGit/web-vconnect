@@ -13,5 +13,9 @@
 
   "api_key_title_page": "API Key Management",
   "your_api_key": "Your API Key",
-  "invoke_button": "INVOKE"
+  "invoke_button": "INVOKE",
+
+  "no_results_found": "No Results Found",
+  "no_projects_match" : "No results match your search",
+  "clearSearch": "Clear Search"
 }

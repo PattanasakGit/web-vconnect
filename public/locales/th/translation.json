@@ -13,5 +13,9 @@
 
   "api_key_title_page": "การจัดการ API Key",
   "your_api_key": "API Key ของคุณ",
-  "invoke_button": "เรียกใช้"
+  "invoke_button": "เรียกใช้",
+
+  "no_results_found": "ไม่พบผลลัพธ์",
+  "no_projects_match": "ไม่มีผลลัพธ์ที่ตรงกับการค้นหาของคุณ",
+  "clearSearch": "ล้างการค้นหา"
 }
