@@ -1,14 +1,16 @@
+"use client";
+
 import React, { useState, useEffect } from "react";
 import { Plus, Trash2, Save, Edit, X } from "lucide-react";
-import ReactMarkdown from "react-markdown";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { markdownComponents } from "@/components/RenderMakdown";
 import ButtonWarnning from "@/components/ButtonWarnning";
+import { MDXRemoteSerializeResult } from "next-mdx-remote";
+import { serialize } from "next-mdx-remote/serialize";
 import {
   getDocuments,
   addDocument,
@@ -20,6 +22,7 @@ import {
   ResizablePanel,
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
+import RenderMarkdown from "@/components/RenderMakdown";
 
 interface Document {
   titleEn: string;
@@ -32,7 +35,7 @@ interface Documents {
   [key: string]: Document;
 }
 
-const EditDocsPage = () => {
+const EditDocsPage: React.FC = () => {
   const [docs, setDocs] = useState<Documents>({});
   const [selectedDoc, setSelectedDoc] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<"en" | "th">("en");
@@ -40,23 +43,66 @@ const EditDocsPage = () => {
   const [tempTitle, setTempTitle] = useState({ en: "", th: "" });
   const [tempContentEn, setTempContentEn] = useState<string>("");
   const [tempContentTh, setTempContentTh] = useState<string>("");
-  const [isEditingCotent, setIsEditingContent] = useState(false);
-  const disable = isEditingCotent;
+  const [isEditingContent, setIsEditingContent] = useState(false);
+  const [mdxSource, setMdxSource] = useState<MDXRemoteSerializeResult | null>(
+    null
+  );
+
+  const disable = isEditingContent;
 
   useEffect(() => {
-    const fetchDocuments = async () => {
+    const fetchDocuments = async (): Promise<void> => {
       const data = await getDocuments();
       setDocs(data);
     };
-    fetchDocuments();
+    void fetchDocuments();
   }, []);
 
-  const getContent = (id: string, lang: "en" | "th") => {
+  useEffect(() => {
+    const updateMDXSource = async (): Promise<void> => {
+      if (!selectedDoc) {
+        setMdxSource(null);
+        return;
+      }
+
+      const content =
+        activeTab === "en"
+          ? isEditingContent
+            ? tempContentEn
+            : docs[selectedDoc]?.contentEn
+          : isEditingContent
+          ? tempContentTh
+          : docs[selectedDoc]?.contentTh;
+
+      try {
+        const serializedContent = await serialize(content || "", {
+          parseFrontmatter: true,
+          mdxOptions: {
+            development: process.env.NODE_ENV === "development",
+          },
+        });
+        setMdxSource(serializedContent);
+      } catch (error) {
+        console.error("Error serializing MDX:", error);
+      }
+    };
+
+    void updateMDXSource();
+  }, [
+    selectedDoc,
+    activeTab,
+    isEditingContent,
+    tempContentEn,
+    tempContentTh,
+    docs,
+  ]);
+
+  const getContent = (id: string, lang: "en" | "th"): string => {
     if (!docs[id]) return "";
     return lang === "en" ? docs[id].contentEn : docs[id].contentTh;
   };
 
-  const handleContentChange = (content: string, lang: "en" | "th") => {
+  const handleContentChange = (content: string, lang: "en" | "th"): void => {
     if (lang === "en") {
       setTempContentEn(content);
     } else {
@@ -64,7 +110,7 @@ const EditDocsPage = () => {
     }
   };
 
-  const handleSaveContent = async (id: string) => {
+  const handleSaveContent = async (id: string): Promise<void> => {
     if (!id || (!tempContentEn && !tempContentTh)) return;
     const updatedDoc = {
       ...docs[id],
@@ -83,7 +129,7 @@ const EditDocsPage = () => {
     }
   };
 
-  const handleAddNewDoc = async () => {
+  const handleAddNewDoc = async (): Promise<void> => {
     const newDoc = {
       titleEn: "New Document",
       titleTh: "เอกสารใหม่",
@@ -98,7 +144,7 @@ const EditDocsPage = () => {
     setSelectedDoc(newId);
   };
 
-  const handleTitleEdit = (id: string) => {
+  const handleTitleEdit = (id: string): void => {
     setEditingTitleMode(true);
     setTempTitle({
       en: docs[id].titleEn,
@@ -106,7 +152,7 @@ const EditDocsPage = () => {
     });
   };
 
-  const handleTitleSave = async (id: string) => {
+  const handleTitleSave = async (id: string): Promise<void> => {
     if (!id || !tempTitle.en || !tempTitle.th) return;
     const updatedDoc = {
       ...docs[id],
@@ -124,7 +170,7 @@ const EditDocsPage = () => {
     }
   };
 
-  const handleDeleteDoc = async (id: string) => {
+  const handleDeleteDoc = async (id: string): Promise<void> => {
     const success = await deleteDocument(id);
     if (success) {
       const newDocs = { ...docs };
@@ -134,7 +180,7 @@ const EditDocsPage = () => {
     }
   };
 
-  const handleEditContent = () => {
+  const handleEditContent = (): void => {
     if (selectedDoc) {
       setTempContentEn(docs[selectedDoc].contentEn);
       setTempContentTh(docs[selectedDoc].contentTh);
@@ -142,7 +188,7 @@ const EditDocsPage = () => {
     }
   };
 
-  const handleCancelEdit = () => {
+  const handleCancelEdit = (): void => {
     setIsEditingContent(false);
     setTempContentEn("");
     setTempContentTh("");
@@ -160,7 +206,7 @@ const EditDocsPage = () => {
                 size="sm"
                 className="bg-blue-500 hover:bg-blue-900 hover:text-white text-white"
                 onClick={handleAddNewDoc}
-                disabled={isEditingCotent}
+                disabled={isEditingContent}
               >
                 <Plus className="w-4 h-4 mr-1" />
                 New
@@ -268,7 +314,7 @@ const EditDocsPage = () => {
                   </TabsList>
                 </Tabs>
                 <div className="flex gap-2">
-                  {isEditingCotent ? (
+                  {isEditingContent ? (
                     <>
                       <ButtonWarnning
                         text="Cancel"
@@ -277,7 +323,7 @@ const EditDocsPage = () => {
                         callback={handleCancelEdit}
                       />
                       <ButtonWarnning
-                        className=" bg-green-700 hover:bg-green-900 hover:text-white text-white"
+                        className="bg-green-700 hover:bg-green-900 hover:text-white text-white"
                         text="Save"
                         title="Are you sure?"
                         detail="Please Check your content before save."
@@ -303,9 +349,9 @@ const EditDocsPage = () => {
                   <div className="border rounded-l-sm p-2 h-full mt-2">
                     <Textarea
                       className="h-full resize-none border-0 pb-[80px]"
-                      disabled={!isEditingCotent}
+                      disabled={!isEditingContent}
                       value={
-                        isEditingCotent
+                        isEditingContent
                           ? activeTab === "en"
                             ? tempContentEn
                             : tempContentTh
@@ -322,13 +368,7 @@ const EditDocsPage = () => {
                 {/* Preview */}
                 <ResizablePanel defaultSize={50}>
                   <div className="border rounded-r-sm p-4 overflow-auto h-full mt-2 pb-[80px]">
-                    <ReactMarkdown components={markdownComponents}>
-                      {isEditingCotent
-                        ? activeTab === "en"
-                          ? tempContentEn
-                          : tempContentTh
-                        : getContent(selectedDoc, activeTab)}
-                    </ReactMarkdown>
+                    <RenderMarkdown mdxSource={mdxSource} />
                   </div>
                 </ResizablePanel>
               </ResizablePanelGroup>

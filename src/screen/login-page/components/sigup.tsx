@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
-import { CallSignUp } from "@/sevices";
+// import { CallSignUp } from "@/sevices";
 
 type SignupFormInputs = {
   email: string;
@@ -26,7 +26,7 @@ const SignupComponent = () => {
   const [confirmShowPassword, setConfirmShowPassword] = useState(false);
 
   const onSubmit: SubmitHandler<SignupFormInputs> = (data) => {
-    CallSignUp(data);
+    // CallSignUp(data);
   };
 
   return (

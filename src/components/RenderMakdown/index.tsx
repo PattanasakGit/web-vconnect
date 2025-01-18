@@ -1,94 +1,106 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-import Image from "next/image";
+import React from "react";
+import { MDXRemote } from "next-mdx-remote";
 import Snippet from "@/components/Snippet";
-import ReactMarkdown from "react-markdown";
+import {
+  MDXCodeBlockProps,
+  MDXHeadingProps,
+  MDXListProps,
+  MDXParagraphProps,
+  MDXPreProps,
+  RenderMarkdownProps,
+} from "./type";
 
-export const markdownComponents: React.ComponentPropsWithoutRef<
-  typeof ReactMarkdown
->["components"] = {
-  h1: ({ node, ...props }) => (
-    <h1
-      className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-4xl mb-8"
-      {...props}
-    />
+const components = {
+  h1: ({ children, ...props }: MDXHeadingProps) => (
+    <h1 className="text-3xl font-bold mb-4 break-words" {...props}>
+      {children}
+    </h1>
   ),
-  h2: ({ node, ...props }) => (
-    <h2
-      className="scroll-m-20 text-2xl font-semibold tracking-tight mb-3"
-      {...props}
-    />
+  h2: ({ children, ...props }: MDXHeadingProps) => (
+    <h2 className="text-2xl font-bold mb-3 break-words" {...props}>
+      {children}
+    </h2>
   ),
-  p({ node, children }) {
-    const hasBlockChild = node.children.some(
-      (child: { type: string; tagName: string }) =>
-        (child.type === "element" &&
-          ["div", "pre", "ul", "ol"].includes(child.tagName)) ||
-        child.type === "text"
-    );
-
-    if (hasBlockChild) {
-      return <span className="ml-2">{children}</span>;
-    }
-
-    return <p>{children}</p>;
-  },
-  ul: ({ node, ...props }) => (
-    <ul className="my-4 ml-6 list-disc [&>li]:mt-2" {...props} />
+  h3: ({ children, ...props }: MDXHeadingProps) => (
+    <h3 className="text-xl font-bold mb-2 break-words" {...props}>
+      {children}
+    </h3>
   ),
-  ol: ({ node, ...props }) => (
-    <ol className="mt-4 mb-2 ml-6 list-decimal [&>li]:mt-2" {...props} />
+  p: ({ children, ...props }: MDXParagraphProps) => (
+    <p className="m-4 text-gray-700 dark:text-gray-300 break-words" {...props}>
+      {children}
+    </p>
   ),
-  li: ({ node, ...props }) => <li className="mt-2" {...props} />,
-  blockquote: ({ node, ...props }) => (
-    <blockquote
-      className="border-l-4 pl-4 italic text-gray-600 dark:text-gray-300"
-      {...props}
-    />
+  ul: ({ children, ...props }: MDXListProps) => (
+    <ul className="list-disc pl-6 mb-4" {...props}>
+      {children}
+    </ul>
   ),
-  a: ({ href, children, ...props }) => (
-    <a
-      href={href}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="text-blue-600 hover:underline dark:text-blue-400 underline"
+  ol: ({ children, ...props }: MDXListProps) => (
+    <ol className="list-decimal pl-6 mb-4" {...props}>
+      {children}
+    </ol>
+  ),
+  li: ({ children, ...props }: React.HTMLAttributes<HTMLLIElement>) => (
+    <li className="mb-1" {...props}>
+      {children}
+    </li>
+  ),
+  code: ({ children, ...props }: React.HTMLAttributes<HTMLElement>) => (
+    <code
+      className="text-blue-500 bg-gray-200 dark:bg-gray-800 rounded px-1 py-0.5 break-words whitespace-pre-wrap"
       {...props}
     >
       {children}
-    </a>
+    </code>
   ),
-  img: ({ src, alt, ...props }) => {
-    return (
-      <Image
-        src={src}
-        alt={alt}
-        className="my-4 mx-auto max-w-full rounded shadow"
-        {...props}
-        layout="responsive"
-        width={700}
-        height={475}
-      />
-    );
-  },
-  code: ({ node, inline, className, children, ...props }) => {
-    inline = !className;
-    if (inline) {
+  pre: ({ children, ...props }: MDXPreProps) => {
+    const childElement = children as React.ReactElement<MDXCodeBlockProps>;
+
+    if (
+      React.isValidElement(childElement) &&
+      typeof childElement.props?.className === "string" &&
+      childElement.props.className.includes("language-")
+    ) {
       return (
-        <code
-          className="bg-gray-200 dark:bg-gray-800 text-sm px-2 py-1 rounded"
+        <div className="mb-6">
+          <Snippet className={childElement.props.className}>
+            {childElement.props.children}
+          </Snippet>
+        </div>
+      );
+    }
+    return (
+      <div className="overflow-x-auto max-w-full">
+        <pre
+          className="bg-gray-100 dark:bg-gray-800 rounded p-4 whitespace-pre-wrap"
           {...props}
         >
           {children}
-        </code>
-      );
-    }
-
-    const match = /language-(\w+)/.exec(className || "");
-    const language = match ? match[1] : "plaintext";
-
-    return (
-      <div className="my-10">
-        <Snippet code={String(children).trim()} language={language} />
+        </pre>
       </div>
     );
   },
+  table: ({ children, ...props }: React.HTMLAttributes<HTMLTableElement>) => (
+    <div className="overflow-x-auto max-w-full">
+      <table className="min-w-full mb-4" {...props}>
+        {children}
+      </table>
+    </div>
+  ),
+  img: (props: React.ImgHTMLAttributes<HTMLImageElement>) => (
+    <img className="max-w-full h-auto" alt={props.alt || ""} {...props} />
+  ),
 };
+
+const RenderMarkdown: React.FC<RenderMarkdownProps> = ({ mdxSource }) => {
+  if (!mdxSource) return null;
+
+  return (
+    <div className="prose prose-blue max-w-none dark:prose-invert break-words overflow-hidden">
+      <MDXRemote {...mdxSource} components={components} />
+    </div>
+  );
+};
+
+export default RenderMarkdown;

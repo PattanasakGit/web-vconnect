@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Eye, EyeOff } from "lucide-react";
-import { CallSignIn } from "@/sevices";
+// import { CallSignIn } from "@/sevices";
 import Button from "@/components/Button";
 
 type SigninFormInputs = {
@@ -21,14 +21,14 @@ const SigninComponent = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors }
     // setError,
     // clearErrors,
   } = useForm<SigninFormInputs>();
 
   const onSubmit: SubmitHandler<SigninFormInputs> = async (data) => {
     try {
-      await CallSignIn(data);
+      // await CallSignIn(data);
     } catch (error) {
       if (error instanceof Error) {
         setInvalidLogin(true);
