@@ -1,3 +1,4 @@
+import React from "react";
 import { Button } from "../ui/button";
 import {
   Dialog,
@@ -12,6 +13,7 @@ import {
 interface BTN_NoProps {
   text: string;
   title: string;
+  buttonIcon?: React.ReactNode;
   detail?: string;
   yesText?: string;
   yesStyle?:
@@ -37,6 +39,7 @@ interface BTN_NoProps {
 const ButtonWarnning: React.FC<BTN_NoProps> = ({
   text,
   title,
+  buttonIcon,
   detail = "Are you sure you want to proceed?",
   yesText = "Yes",
   yesStyle = "destructive",
@@ -50,8 +53,8 @@ const ButtonWarnning: React.FC<BTN_NoProps> = ({
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button size="sm" variant="outline" {...props} >
-          {text}
+        <Button size="sm" variant="outline" {...props}>
+          {buttonIcon ?? text}
         </Button>
       </DialogTrigger>
       <DialogContent>
