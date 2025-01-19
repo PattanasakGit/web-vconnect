@@ -4,12 +4,14 @@ import { Card } from "@/components/ui/card";
 const EmptyState = ({
   ModalCreate,
   textEmptyData,
+  ButtomNotCreate,
 }: {
-  ModalCreate: React.ElementType;
   textEmptyData: {
     title: string;
     message: string;
   };
+  ModalCreate?: React.ElementType;
+  ButtomNotCreate?: React.ElementType;
 }) => (
   <Card className="text-center p-12 w-full sm:w-3/4 md:w-1/2 lg:w-1/3 mx-auto">
     <div className="space-y-6">
@@ -24,7 +26,11 @@ const EmptyState = ({
           {textEmptyData.message}
         </p>
       </div>
-      <ModalCreate />
+      {ModalCreate ? (
+                <ModalCreate />
+              ) : ButtomNotCreate ? (
+                <ButtomNotCreate />
+              ) : null}
     </div>
   </Card>
 );

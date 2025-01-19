@@ -171,7 +171,7 @@ const ProjectsPage = () => {
 
   const renderProjectCard = (project: ProjectListType) => (
     <ProjectCard key={project.id} project={project} />
-  );
+  )
 
   const renderProjectList = (project: ProjectListType) => (
     <ProjectList key={project.id} project={project} />

@@ -7,11 +7,11 @@ import EmptyState from "./views/EmptyState";
 import NoSearchResults from "./views/NoSearchResults";
 import ButtonSwitchViewMode from "./views/ButtonSwitchViewMode";
 
-
 interface DataItem {
   id: number;
   name: string;
   description: string;
+  status?: boolean;
 }
 
 interface CardDisplayDatalistProps {
@@ -21,11 +21,12 @@ interface CardDisplayDatalistProps {
   subtitle: string;
   renderCard: (item: DataItem) => React.ReactNode;
   renderList: (item: DataItem) => React.ReactNode;
-  ModalCreate: React.ElementType;
   textEmptyData: {
     title: string;
     message: string;
   };
+  ModalCreate?: React.ElementType;
+  ButtomNotCreate?: React.ElementType;
 }
 
 const CardDisplayDatalist: React.FC<CardDisplayDatalistProps> = ({
@@ -37,6 +38,7 @@ const CardDisplayDatalist: React.FC<CardDisplayDatalistProps> = ({
   renderList,
   ModalCreate,
   textEmptyData,
+  ButtomNotCreate,
 }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
@@ -97,7 +99,11 @@ const CardDisplayDatalist: React.FC<CardDisplayDatalistProps> = ({
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <ModalCreate />
+              {ModalCreate ? (
+                <ModalCreate />
+              ) : ButtomNotCreate ? (
+                <ButtomNotCreate />
+              ) : null}
             </div>
           </div>
           <div className="flex justify-between items-center px-4">
@@ -130,6 +136,7 @@ const CardDisplayDatalist: React.FC<CardDisplayDatalistProps> = ({
               <EmptyState
                 ModalCreate={ModalCreate}
                 textEmptyData={textEmptyData}
+                ButtomNotCreate={ButtomNotCreate}
               />
             ) : filteredData.length === 0 ? (
               <NoSearchResults
