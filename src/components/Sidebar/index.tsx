@@ -21,6 +21,7 @@ import appConfig from "@/constants/appConfig";
 import ButtonTheme from "../Button";
 import Link from "next/link";
 import { useEffect } from "react";
+import { getAdjustedUrl } from "@/utils/getAdjustedUrl";
 
 interface MenuItemProps {
   title: string;
@@ -60,14 +61,6 @@ export function AppSidebar({ items }: { items: MenuItemProps[] }) {
         )}
       </div>
     );
-  };
-
-  const getAdjustedUrl = (pathname: string, itemUrl: string): string => {
-    if (pathname.includes("/portal") && itemUrl.startsWith("/portal")) {
-      const pathWithoutPortal = itemUrl.replace("/portal/", ""); // ลบ "/portal/"
-      return pathWithoutPortal;
-    }
-    return itemUrl.replace(/^\//, "");
   };
 
   const UserContent = () => {
