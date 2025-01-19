@@ -51,7 +51,7 @@ const TopicDetailPage = ({ topicID }: { topicID: string | null }) => {
         setTimeout(() => setCopyPasswordStatus(false), 2000);
       }
       toast.success("Copied to clipboard!");
-    } catch (error) {
+    } catch {
       toast.error("Failed to copy to clipboard");
     }
   };
@@ -59,19 +59,21 @@ const TopicDetailPage = ({ topicID }: { topicID: string | null }) => {
   const handleDeleteTopic = async (topicID: string) => {
     try {
       // Implement delete logic here
+      console.log('topicID =>', topicID);
       toast.success("Topic deleted successfully");
-    } catch (error) {
+    } catch {
       toast.error("Failed to delete topic");
     }
   };
 
   const handleToggleStatus = async (topicID: string) => {
     try {
+      console.log('topicID =>', topicID);
       setItemDetail((prev) =>
         prev ? { ...prev, status: !prev.status } : prev
       );
       toast.success("Status updated successfully");
-    } catch (error) {
+    } catch {
       toast.error("Failed to update status");
     }
   };

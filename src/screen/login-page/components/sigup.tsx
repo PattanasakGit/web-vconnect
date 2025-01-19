@@ -25,7 +25,7 @@ const SignupComponent = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [confirmShowPassword, setConfirmShowPassword] = useState(false);
 
-  const onSubmit: SubmitHandler<SignupFormInputs> = (data) => {
+  const onSubmit: SubmitHandler<SignupFormInputs> = () => {
     // CallSignUp(data);
   };
 

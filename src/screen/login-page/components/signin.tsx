@@ -26,7 +26,7 @@ const SigninComponent = () => {
     // clearErrors,
   } = useForm<SigninFormInputs>();
 
-  const onSubmit: SubmitHandler<SigninFormInputs> = async (data) => {
+  const onSubmit: SubmitHandler<SigninFormInputs> = async () => {
     try {
       // await CallSignIn(data);
     } catch (error) {
